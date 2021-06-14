@@ -1,0 +1,60 @@
+---
+title: "NIFA Visualizations"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r library}
+library(haven)
+library(ggplot2)
+library(plotly)
+```
+
+```{r data}
+categ <- read_dta(file = "ByCateg_v5.dta")
+
+categfull <- categ %>%
+  filter(!is.na(price))
+```
+
+## Data Visualizations
+
+```{r protein}
+ggplot(data = categfull, mapping = aes(x = price, y = densprot)) +
+geom_point(aes(color = broadcateg_name, size = tspend), 
+           alpha = 0.5) +
+  labs(title = "Protein on a Budget?", x = "Price/1000 kcal", y = "Protein/1000 kcal") +
+  scale_size(guide = 'none') +
+  scale_color_discrete(name = "Food Category")
+```
+
+```{r sodium}
+ggplot(data = categfull, mapping = aes(x = price, y = denssodi)) +
+geom_point(aes(color = broadcateg_name, size = tspend), 
+           alpha = 0.5) +
+  labs(title = "Sodium on a Budget?", x = "Price/1000 kcal", y = "Protein/1000 kcal") +
+  scale_size(guide = 'none') +
+  scale_color_discrete(name = "Food Category")
+```
+
+```{r added sugar}
+ggplot(data = categfull, mapping = aes(x = price, y = dens_add_sugars)) +
+geom_point(aes(color = broadcateg_name, size = tspend), 
+           alpha = 0.5) +
+  labs(title = "Sugar on a Budget?", x = "Price/1000 kcal", y = "Protein/1000 kcal") +
+  scale_size(guide = 'none') +
+  scale_color_discrete(name = "Food Category")
+```
+
+```{r fiber}
+ggplot(data = categfull, mapping = aes(x = price, y = densfibe)) +
+geom_point(aes(color = broadcateg_name, size = tspend), 
+           alpha = 0.5) +
+  labs(title = "Fiber on a Budget?", x = "Price/1000 kcal", y = "Protein/1000 kcal") +
+  scale_size(guide = 'none') +
+  scale_color_discrete(name = "Food Category")
+```
