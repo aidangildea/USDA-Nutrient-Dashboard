@@ -37,7 +37,7 @@ prot <- plot_ly(
   categfull, x = ~price, y = ~densprot,
   # Hover text:
   text = ~paste("<b>Broad Category:</b>", broadcateg_name, "<br><b>Type:</b>", categ_name, "<br><b>Description:</b>", categ_des),
-  color = ~broadcateg_name, size = ~tspend, opacity = 0.7
+  color = ~broadcateg_name, size = ~tspend, opacity = 0.8
 )
 
 prot %>%
