@@ -32,6 +32,21 @@ geom_point(aes(color = broadcateg_name, size = tspend),
   scale_color_discrete(name = "Food Category")
 ```
 
+```{r prot}
+prot <- plot_ly(
+  categfull, x = ~price, y = ~densprot,
+  # Hover text:
+  text = ~paste("<b>Broad Category:</b>", broadcateg_name, "<br><b>Type:</b>", categ_name, "<br><b>Description:</b>", categ_des),
+  color = ~broadcateg_name, size = ~tspend, opacity = 0.7
+)
+
+prot %>%
+  layout(title = "Protein",
+                     xaxis = list(title = "Price/1000kcal"), yaxis = list(title = "Protein/1000kcal"),
+                     margin = list(l = 123))
+```
+
+
 ```{r sodium}
 ggplot(data = categfull, mapping = aes(x = price, y = denssodi)) +
 geom_point(aes(color = broadcateg_name, size = tspend), 
