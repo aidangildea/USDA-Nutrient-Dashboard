@@ -21,7 +21,7 @@ categfull <- categ %>%
   filter(!is.na(price))
 ```
 
-## Data Visualizations
+## Initial Data Visualizations
 
 ```{r protein}
 ggplot(data = categfull, mapping = aes(x = price, y = densprot)) +
@@ -31,25 +31,6 @@ geom_point(aes(color = broadcateg_name, size = tspend),
   scale_size(guide = 'none') +
   scale_color_discrete(name = "Food Category")
 ```
-
-```{r prot}
-prot <- plot_ly(
-  categfull, x = ~price, y = ~densprot,
-  # Hover text:
-  text = ~paste("<b>Broad Category:</b>", broadcateg_name, "<br><b>Type:</b>", categ_name, "<br><b>Description:</b>", categ_des),
-  color = ~broadcateg_name, size = ~tspend, opacity = 0.8
-)
-
-leg <- list(
-  bordercolor = "#E2E2E2",
-  borderwidth = 0.5)
-
-prot %>%
-  layout(title = "Protein",
-                     xaxis = list(title = "Price/1000kcal"), yaxis = list(title = "Protein/1000kcal"),
-                     margin = list(l = 123), legend = leg) 
-```
-
 
 ```{r sodium}
 ggplot(data = categfull, mapping = aes(x = price, y = denssodi)) +
@@ -77,3 +58,67 @@ geom_point(aes(color = broadcateg_name, size = tspend),
   scale_size(guide = 'none') +
   scale_color_discrete(name = "Food Category")
 ```
+
+# First Plotly Iteration
+```{r prot, warning = FALSE, message=FALSE, error=FALSE}
+# Legend
+leg <- list(
+  bordercolor = "#E2E2E2",
+  borderwidth = 0.5)
+
+# Protein 
+prot <- plot_ly(
+  categfull, x = ~price, y = ~densprot,
+  # Hover text:
+  text = ~paste("<b>Type:</b>", categ_name, "<br><b>Description:</b>", categ_des),
+  color = ~broadcateg_name, size = ~tspend, opacity = 0.8
+)
+
+prot %>%
+  layout(title = "Protein",
+                     xaxis = list(title = "Price/1000kcal"), yaxis = list(title = "Protein/1000kcal"),
+                     margin = list(l = 123), legend = leg) 
+```
+
+# Plotly Visualization with Dropdown Feature
+``` {r dropdown, warning = FALSE, message=FALSE, error=FALSE}
+#Plot with Dropdown
+
+prot2 <- plot_ly(
+  data = categfull, x = ~price, y = ~densprot, 
+          color =  ~broadcateg_name, size = ~tspend,
+          alpha = 0.7,
+          text = ~paste0("<b>", categ_name, "</b>",  "<br><i>Description: </i>", categ_des),
+          type = "scatter",
+          mode = "markers"
+          ) %>%
+  layout(
+    title = "Price v. Nutrient Density",
+    xaxis = list(title = "Price/1000kcal"),
+    yaxis = list(title = "y"),
+    # yaxis = list(title = "Protein/1000kcal"),
+       updatemenus = list(
+        list(
+          y = .3,
+          x = 1.45,
+        type = "list",
+        label = 'Category',
+        buttons = list(
+          list(method = "restyle",
+               args = list("y", list(categfull$densprot)),
+               label = "Protein"),
+          list(method = "restyle",
+               args = list("y", list(categfull$densfibe)),
+               label = "Fiber"),
+          list(method = "restyle",
+               args = list("y", 
+                list(categfull$dens_add_sugars)),
+               label = "Added Sugar"),
+          list(method = "restyle",
+               args = list("y", list(categfull$denssodi)),
+               label = "Sodium")))))
+
+prot2
+```
+
+
