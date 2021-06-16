@@ -40,10 +40,14 @@ prot <- plot_ly(
   color = ~broadcateg_name, size = ~tspend, opacity = 0.8
 )
 
+leg <- list(
+  bordercolor = "#E2E2E2",
+  borderwidth = 0.5)
+
 prot %>%
   layout(title = "Protein",
                      xaxis = list(title = "Price/1000kcal"), yaxis = list(title = "Protein/1000kcal"),
-                     margin = list(l = 123))
+                     margin = list(l = 123), legend = leg) 
 ```
 
 
