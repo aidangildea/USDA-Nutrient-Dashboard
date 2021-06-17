@@ -60,6 +60,8 @@ geom_point(aes(color = broadcateg_name, size = tspend),
 ```
 
 # First Plotly Iteration
+
+# Protein
 ```{r prot, warning = FALSE, message=FALSE, error=FALSE}
 # Legend
 leg <- list(
@@ -79,6 +81,28 @@ prot %>%
                      xaxis = list(title = "Price/1000kcal"), yaxis = list(title = "Protein/1000kcal"),
                      margin = list(l = 123), legend = leg) 
 ```
+# Fiber
+
+```{r fibers, warning = FALSE, message=FALSE, error=FALSE}
+# Legend
+leg1 <- list(
+  bordercolor = "#E2E2E2",
+  borderwidth = 0.5)
+
+# Protein 
+fibe <- plot_ly(
+  categfull, x = ~price, y = ~densfibe,
+  # Hover text:
+  text = ~paste("<b>Type:</b>", categ_name, "<br><b>Description:</b>", categ_des),
+  color = ~broadcateg_name, size = ~tspend, opacity = 0.8
+)
+
+fibe %>%
+  layout(title = "Fiber",
+                     xaxis = list(title = "Price/1000kcal"), yaxis = list(title = "Fiber/1000kcal"),
+                     margin = list(l = 123), legend = leg1) 
+```
+
 
 # Plotly Visualization with Dropdown Feature
 ``` {r dropdown, warning = FALSE, message=FALSE, error=FALSE}
