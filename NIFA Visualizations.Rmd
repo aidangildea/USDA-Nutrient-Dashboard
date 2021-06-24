@@ -20,7 +20,8 @@ categ <- read_dta(file = "ByCateg_v5.dta")
 nutrients <- read_dta(file = "foodcode_nutrient_density.dta") 
 
 categfull <- categ %>%
-  filter(!is.na(price))
+  filter(!is.na(price)) %>%
+  filter(categ_name != "Uncat")
 ```
 
 ## Initial Data Visualizations
@@ -80,7 +81,7 @@ prot <- plot_ly(
 
 prot %>%
   layout(title = "Protein",
-                     xaxis = list(title = "Price/1000kcal"), yaxis = list(title = "Protein/1000kcal"),
+                     xaxis = list(title = "Price/1000kcal"), yaxis = list(title = "Protein(gm)/1000kcal"),
                      margin = list(l = 123), legend = leg) 
 ```
 # Fiber
@@ -101,7 +102,7 @@ fibe <- plot_ly(
 
 fibe %>%
   layout(title = "Fiber",
-                     xaxis = list(title = "Price/1000kcal"), yaxis = list(title = "Fiber/1000kcal"),
+                     xaxis = list(title = "Price/1000kcal"), yaxis = list(title = "Fiber(gm)/1000kcal"),
                      margin = list(l = 123), legend = leg1) 
 ```
 
@@ -109,21 +110,20 @@ fibe %>%
 # Plotly Visualization with Dropdown Feature
 ```{r dropdown, error=FALSE, message=FALSE, warning=FALSE}
 #Plot with Dropdown
-
 prot2 <- plot_ly(
-  data = categfull, x = ~price, y = ~densprot, 
+  data = categfull, x = ~price, y = ~densprot,
           color =  ~broadcateg_name, size = ~tspend,
           alpha = 0.7,
           width = 900,
           height = 500,
           hoverinfo = "text",
-          text = ~paste0("<b>", categ_name, "</b><br>", "<b><i>Description: </b></i>", categ_des, "<br><b><i>Total Daily Spending: </b></i>", tspend),
-    #ifelse(categfull$categ_name == categfull$categ_des, (~paste0("<b>", categ_name, "</b><br>", "<b><i>Description: </b></i>", categ_des, "<br><b><i>Total Daily Spending: </b></i>", tspend)), (~paste0("<b>", categ_name, "</b><br>", "<br><b><i>Total Daily Spending: </b></i>", tspend))),         
+          text = ~paste0("<b>", categ_name, "</b><br>", "<b><i>Description: </b></i>", categ_des, "<br><b><i>Daily Spending/Capita: </b></i>", round(tspend, 3)),
+    #ifelse(categfull$categ_name == categfull$categ_des, (~paste0("<b>", categ_name, "</b><br>", "<b><i>Description: </b></i>", categ_des, "<br><b><i>Total Spending/Capita: </b></i>", tspend)), (~paste0("<b>", categ_name, "</b><br>", "<br><b><i>Total Daily Spending: </b></i>", tspend))),         
           type = "scatter",
           mode = "markers"
           ) %>%
   layout(
-    title = list(text = "<b>Price v. Nutrient Density</b>", x = .7),
+    title = list(text = "<b>Finding Affordable Nutrient Sources</b>", x = .75),
     xaxis = list(title = "Price($)/1000kcal"),
     yaxis = list(title = ""),
     margin = list(b=150), ##right margin in pixels
@@ -140,20 +140,31 @@ prot2 <- plot_ly(
           x = -.05,
         type = "list",
         label = 'Category',
-        buttons = list(
+      buttons = list(
          list(method = "restyle",
+              ##list(method = "update",
+                  ##args = list("y", list(~densprot)),
           args = list(list(y = list(categfull$densprot))),
                #args = list("y", list(categfull$densprot)),
                label = "Protein(gm)/1000kcal"),
-          list(method = "restyle",
+          list(
+           ## method = "update",
+           ##  args = list("y", list(~densfibe)),
+            method = "restyle",
                args = list("y", list(categfull$densfibe)),
                label = "Fiber(gm)/1000kcal"),
-          list(method = "restyle",
+          list( 
+            ## method = "update",
+            ## args = list("y", list(~dens_add_sugars)),
+      method = "restyle",
                args = list("y", list(categfull$dens_add_sugars)),
-               label = "Added Sugar(g)/1000kcal"),
-          list(method = "restyle",
-               args = list("y", list(categfull$denssodi)),
-               label = "Sodium(gm)/1000kcal")))))
+               label = "Added Sugar(gm)/1000kcal"),
+          list(
+            ## method = "update",
+            ## args = list("y", list(~denssodi)),
+            method = "restyle",
+              args = list("y", list(categfull$denssodi)),
+               label = "Sodium(mg)/1000kcal")))))
 
 prot2
 ```
