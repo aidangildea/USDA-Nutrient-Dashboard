@@ -17,6 +17,8 @@ library(plotly)
 ```{r data}
 categ <- read_dta(file = "ByCateg_v5.dta")
 
+nutrients <- read_dta(file = "foodcode_nutrient_density.dta") 
+
 categfull <- categ %>%
   filter(!is.na(price))
 ```
@@ -83,7 +85,7 @@ prot %>%
 ```
 # Fiber
 
-```{r fibers, warning = FALSE, message=FALSE, error=FALSE}
+```{r fibers, error=FALSE, message=FALSE, warning=FALSE}
 # Legend
 leg1 <- list(
   bordercolor = "#E2E2E2",
@@ -105,42 +107,53 @@ fibe %>%
 
 
 # Plotly Visualization with Dropdown Feature
-``` {r dropdown, warning = FALSE, message=FALSE, error=FALSE}
+```{r dropdown, error=FALSE, message=FALSE, warning=FALSE}
 #Plot with Dropdown
 
 prot2 <- plot_ly(
   data = categfull, x = ~price, y = ~densprot, 
           color =  ~broadcateg_name, size = ~tspend,
           alpha = 0.7,
-          text = ~paste0("<b>", categ_name, "</b>",  "<br><i>Description: </i>", categ_des),
+          width = 900,
+          height = 500,
+          hoverinfo = "text",
+          text = ~paste0("<b>", categ_name, "</b><br>", "<b><i>Description: </b></i>", categ_des, "<br><b><i>Total Daily Spending: </b></i>", tspend),
+    #ifelse(categfull$categ_name == categfull$categ_des, (~paste0("<b>", categ_name, "</b><br>", "<b><i>Description: </b></i>", categ_des, "<br><b><i>Total Daily Spending: </b></i>", tspend)), (~paste0("<b>", categ_name, "</b><br>", "<br><b><i>Total Daily Spending: </b></i>", tspend))),         
           type = "scatter",
           mode = "markers"
           ) %>%
   layout(
-    title = "Price v. Nutrient Density",
-    xaxis = list(title = "Price/1000kcal"),
-    yaxis = list(title = "y"),
-    # yaxis = list(title = "Protein/1000kcal"),
+    title = list(text = "<b>Price v. Nutrient Density</b>", x = .7),
+    xaxis = list(title = "Price($)/1000kcal"),
+    yaxis = list(title = ""),
+    margin = list(b=150), ##right margin in pixels
+    annotations = 
+           list(x = 1.32, y = .4, #position of text adjust as needed
+                text = "*Datapoint size reflects \nfood category's total \ndaily spending", 
+                showarrow = F, xref='paper', yref='paper', 
+                xanchor='right', yanchor='auto', xshift=0, yshift=0,
+                font=list(size=12, color="grey")), 
+    legend=list(title=list(text='<b> Broad Food Category </b>')),
        updatemenus = list(
         list(
-          y = .3,
-          x = 1.45,
+          y = .55,
+          x = -.05,
         type = "list",
         label = 'Category',
         buttons = list(
-          list(method = "restyle",
-               args = list("y", list(categfull$densprot)),
-               label = "Protein"),
+         list(method = "restyle",
+          args = list(list(y = list(categfull$densprot))),
+               #args = list("y", list(categfull$densprot)),
+               label = "Protein(gm)/1000kcal"),
           list(method = "restyle",
                args = list("y", list(categfull$densfibe)),
-               label = "Fiber"),
+               label = "Fiber(gm)/1000kcal"),
           list(method = "restyle",
-               args = list("y", 
-                list(categfull$dens_add_sugars)),
-               label = "Added Sugar"),
+               args = list("y", list(categfull$dens_add_sugars)),
+               label = "Added Sugar(g)/1000kcal"),
           list(method = "restyle",
                args = list("y", list(categfull$denssodi)),
-               label = "Sodium")))))
+               label = "Sodium(gm)/1000kcal")))))
 
 prot2
 ```
