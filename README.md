@@ -1,2 +1,2 @@
 # NIFA
-Visualizations and data work for NIFA research project.
+Visualizations and data work for for USDA funded research project on achieving a low-cost nutritious diet. 
